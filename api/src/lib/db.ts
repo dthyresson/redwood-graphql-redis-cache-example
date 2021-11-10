@@ -5,7 +5,10 @@ import { PrismaClient } from '@prisma/client'
 
 import { emitLogLevels, handlePrismaLogging } from '@redwoodjs/api/logger'
 
-import { handlePrismaInvalidation } from './responseCache'
+import {
+  handlePrismaInvalidation,
+  isPrismaMiddlewareInvalidationEnabled,
+} from './responseCache'
 import { logger } from './logger'
 
 /*
@@ -21,7 +24,7 @@ handlePrismaLogging({
   logLevels: ['query', 'info', 'warn', 'error'],
 })
 
-if (process.env.ENABLE_PRISMA_MIDDLEWARE_INVALIDATION === 'true') {
+if (isPrismaMiddlewareInvalidationEnabled) {
   db.$use(async (params, next) => {
     await handlePrismaInvalidation(params)
     const result = await next(params)

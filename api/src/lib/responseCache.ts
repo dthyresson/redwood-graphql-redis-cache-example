@@ -7,6 +7,9 @@ const EXPIRE_IN_SECONDS =
   (process.env.EXPIRE_IN_SECONDS && parseInt(process.env.EXPIRE_IN_SECONDS)) ||
   30
 
+export const isPrismaMiddlewareInvalidationEnabled =
+  process.env.ENABLE_PRISMA_MIDDLEWARE_INVALIDATION === 'true'
+
 const enableCache = (context) => {
   const enabled = context.request.headers['enable-response-cache']
   if (enabled && enabled === 'true') return true
@@ -21,8 +24,7 @@ export const cache = createRedisCache({ redis })
 export const responseCacheConfig = {
   enabled: (context) => enableCache(context),
   cache,
-  invalidateViaMutation:
-    process.env.ENABLE_PRISMA_MIDDLEWARE_INVALIDATION !== 'true',
+  invalidateViaMutation: !isPrismaMiddlewareInvalidationEnabled,
   ttl: EXPIRE_IN_SECONDS * 1000,
 }
 
