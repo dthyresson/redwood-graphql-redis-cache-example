@@ -21,8 +21,10 @@ handlePrismaLogging({
   logLevels: ['query', 'info', 'warn', 'error'],
 })
 
-db.$use(async (params, next) => {
-  await handlePrismaInvalidation(params)
-  const result = await next(params)
-  return result
-})
+if (process.env.ENABLE_PRISMA_MIDDLEWARE_INVALIDATION === 'true') {
+  db.$use(async (params, next) => {
+    await handlePrismaInvalidation(params)
+    const result = await next(params)
+    return result
+  })
+}

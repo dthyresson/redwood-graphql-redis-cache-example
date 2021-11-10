@@ -21,6 +21,8 @@ export const cache = createRedisCache({ redis })
 export const responseCacheConfig = {
   enabled: (context) => enableCache(context),
   cache,
+  invalidateViaMutation:
+    process.env.ENABLE_PRISMA_MIDDLEWARE_INVALIDATION !== 'true',
   ttl: EXPIRE_IN_SECONDS * 1000,
 }
 
