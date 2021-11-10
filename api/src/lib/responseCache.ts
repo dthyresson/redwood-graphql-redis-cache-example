@@ -30,10 +30,13 @@ const MODELS_TO_INVALIDATE = ['Music']
 export const handlePrismaInvalidation = async (params) => {
   const model = params.model
   const action = params.action
+  // note: not correct for updateMany
+  // @todo: get all ids and build a collection of invalidation entities
   const id = params.args?.where?.id
 
-  if (model && action && id) {
-    const isActionToInvalidate = ACTIONS_TO_INVALIDATE.includes(action)
+  const isActionToInvalidate = ACTIONS_TO_INVALIDATE.includes(action)
+
+  if (isActionToInvalidate && model && id) {
     const isModelToInvalidate = MODELS_TO_INVALIDATE.includes(model)
 
     if (isActionToInvalidate && isModelToInvalidate) {
