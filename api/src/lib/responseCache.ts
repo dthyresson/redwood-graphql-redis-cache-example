@@ -1,4 +1,6 @@
 import { createRedisCache } from '@envelop/response-cache-redis'
+
+import { logger } from './logger'
 import { redis } from 'src/lib/redis'
 
 const EXPIRE_IN_SECONDS =
@@ -20,4 +22,23 @@ export const responseCacheConfig = {
   enabled: (context) => enableCache(context),
   cache,
   ttl: EXPIRE_IN_SECONDS * 1000,
+}
+
+const ACTIONS_TO_INVALIDATE = ['update', 'updateMany', 'upsert', 'delete']
+const MODELS_TO_INVALIDATE = ['Music']
+
+export const handlePrismaInvalidation = async (params) => {
+  const model = params.model
+  const action = params.action
+  const id = params.args?.where?.id
+
+  if (model && action && id) {
+    const isActionToInvalidate = ACTIONS_TO_INVALIDATE.includes(action)
+    const isModelToInvalidate = MODELS_TO_INVALIDATE.includes(model)
+
+    if (isActionToInvalidate && isModelToInvalidate) {
+      logger.debug({ action, model, id }, 'Invalidating model')
+      await cache.invalidate([{ typename: model, id }])
+    }
+  }
 }

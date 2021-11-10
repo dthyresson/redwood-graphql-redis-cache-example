@@ -3,10 +3,7 @@ import type { Prisma } from '@prisma/client'
 import { db } from 'src/lib/db'
 
 export const musics = () => {
-  return db.music.findMany({
-    where: { artistHotttnesss: { gte: 0.5 } },
-    orderBy: { artistHotttnesss: 'desc' },
-  })
+  return db.music.findMany({ take: 20 })
 }
 
 export const music = ({ id }: Prisma.MusicWhereUniqueInput) => {
