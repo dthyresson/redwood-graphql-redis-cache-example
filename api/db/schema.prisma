@@ -1,0 +1,49 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = "native"
+}
+
+// https://corgis-edu.github.io/corgis/csv/music/
+model Music {
+  id Int @id @default(autoincrement())
+  artistFamiliarity Float
+  artistHotttnesss Float
+  artistId String
+  artistLatitude Float
+  artistLocation Int
+  artistLongitude Float
+  artistName String
+  artistSimilar Float
+  artistTerms String
+  artistTermsFreq Float
+  releaseId Int
+  releaseName Int
+  songArtistMbtags Float
+  songArtistMbtagsCount Float
+  songBarsConfidence Float
+  songBarsStart Float
+  songBeatsConfidence Float
+  songBeatsStart Float
+  songDuration Float
+  songEndOfFadeIn Float
+  songHotttnesss Float
+  songId String
+  songKey Float
+  songKeyConfidence Float
+  songLoudness Float
+  songMode Int
+  songModeConfidence Float
+  songStartOfFadeOut Float
+  songTatumsConfidence Float
+  songTatumsStart Float
+  songTempo Float
+  songTimeSignature Float
+  songTimeSignatureConfidence Float
+  songTitle Int
+  songYear Int
+}
