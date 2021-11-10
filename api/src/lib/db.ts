@@ -7,7 +7,6 @@ import { emitLogLevels, handlePrismaLogging } from '@redwoodjs/api/logger'
 
 import { handlePrismaInvalidation } from './responseCache'
 import { logger } from './logger'
-import { TypeNumericalityValidationError } from '@redwoodjs/api'
 
 /*
  * Instance of the Prisma Client
