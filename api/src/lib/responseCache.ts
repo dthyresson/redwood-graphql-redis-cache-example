@@ -27,6 +27,16 @@ export const responseCacheConfig = {
 const ACTIONS_TO_INVALIDATE = ['update', 'updateMany', 'upsert', 'delete']
 const MODELS_TO_INVALIDATE = ['Music']
 
+export const buildEntityToInvalidate = ({ model, id }) => {
+  return { typename: model, id }
+}
+
+export const buildEntitiesToInvalidate = ({ model, ids }) => {
+  return ids.map((id) => {
+    return buildEntityToInvalidate({ model, id })
+  })
+}
+
 export const handlePrismaInvalidation = async (params) => {
   const model = params.model
   const action = params.action
@@ -41,7 +51,7 @@ export const handlePrismaInvalidation = async (params) => {
 
     if (isActionToInvalidate && isModelToInvalidate) {
       logger.debug({ action, model, id }, 'Invalidating model')
-      await cache.invalidate([{ typename: model, id }])
+      await cache.invalidate([buildEntityToInvalidate({ model, id })])
     }
   }
 }
