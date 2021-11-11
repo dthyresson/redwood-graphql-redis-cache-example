@@ -1,49 +1,147 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = "native"
+model Album {
+  id  Int     @id @unique(map: "IPK_Album") @default(autoincrement())
+  title    String
+  artistId Int
+  artist   Artist  @relation(fields: [artistId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  track    Track[]
+
+  @@index([id], map: "IFK_AlbumArtistId")
 }
 
-// https://corgis-edu.github.io/corgis/csv/music/
-model Music {
-  id Int @id @default(autoincrement())
-  artistFamiliarity Float
-  artistHotttnesss Float
-  artistId String
-  artistLatitude Float
-  artistLocation Int
-  artistLongitude Float
-  artistName String
-  artistSimilar Float
-  artistTerms String
-  artistTermsFreq Float
-  releaseId Int
-  releaseName Int
-  songArtistMbtags Float
-  songArtistMbtagsCount Float
-  songBarsConfidence Float
-  songBarsStart Float
-  songBeatsConfidence Float
-  songBeatsStart Float
-  songDuration Float
-  songEndOfFadeIn Float
-  songHotttnesss Float
-  songId String
-  songKey Float
-  songKeyConfidence Float
-  songLoudness Float
-  songMode Int
-  songModeConfidence Float
-  songStartOfFadeOut Float
-  songTatumsConfidence Float
-  songTatumsStart Float
-  songTempo Float
-  songTimeSignature Float
-  songTimeSignatureConfidence Float
-  songTitle Int
-  songYear Int
+model Artist {
+  id Int     @id @unique(map: "IPK_Artist") @default(autoincrement())
+  name     String?
+  album    Album[]
+}
+
+model Customer {
+  id   Int       @id @unique(map: "IPK_Customer") @default(autoincrement())
+  firstName    String
+  lastName     String
+  company      String?
+  address      String?
+  city         String?
+  state        String?
+  country      String?
+  postalCode   String?
+  phone        String?
+  fax          String?
+  email        String
+  supportRepId Int?
+  employee     Employee? @relation(fields: [supportRepId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invoice      Invoice[]
+
+  @@index([supportRepId], map: "IFK_CustomerSupportRepId")
+}
+
+model Employee {
+  id     Int        @id @unique(map: "IPK_Employee") @default(autoincrement())
+  lastName       String
+  firstName      String
+  title          String?
+  reportsTo      Int?
+  birthDate      DateTime?
+  hireDate       DateTime?
+  address        String?
+  city           String?
+  state          String?
+  country        String?
+  postalCode     String?
+  phone          String?
+  fax            String?
+  email          String?
+  employee       Employee?  @relation("EmployeeToEmployee_ReportsTo", fields: [reportsTo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  customer       Customer[]
+  otherEmployee Employee[] @relation("EmployeeToEmployee_ReportsTo")
+
+  @@index([reportsTo], map: "IFK_EmployeeReportsTo")
+}
+
+model Genre {
+  id Int     @id @unique(map: "IPK_Genre") @default(autoincrement())
+  name    String?
+  track   Track[]
+}
+
+model Invoice {
+  id         Int           @id @unique(map: "IPK_Invoice") @default(autoincrement())
+  customerId        Int
+  invoiceDate       DateTime
+  billingAddress    String?
+  billingCity       String?
+  billingState      String?
+  billingCountry    String?
+  billingPostalCode String?
+  total             Decimal
+  customer          Customer      @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invoiceLine       InvoiceLine[]
+
+  @@index([customerId], map: "IFK_InvoiceCustomerId")
+}
+
+model InvoiceLine {
+  id Int     @id @unique(map: "IPK_InvoiceLine") @default(autoincrement())
+  invoiceId     Int
+  trackId       Int
+  unitPrice     Decimal
+  quantity      Int
+  invoice       Invoice @relation(fields: [invoiceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  track         Track   @relation(fields: [trackId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([trackId], map: "IFK_InvoiceLineTrackId")
+  @@index([invoiceId], map: "IFK_InvoiceLineInvoiceId")
+}
+
+model MediaType {
+  id Int     @id @unique(map: "IPK_MediaType") @default(autoincrement())
+  name        String?
+  track       Track[]
+}
+
+model Playlist {
+  id    Int             @id @unique(map: "IPK_Playlist") @default(autoincrement())
+  name          String?
+  tracks Track[]
+}
+
+// model PlaylistTrack {
+//   playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   playlistId Int
+//   track      Track    @relation(fields: [trackId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   trackId    Int
+
+//   @@id([playlistId, trackId])
+//   @@unique([playlistId, trackId], map: "IPK_PlaylistTrack")
+//   @@index([trackId], map: "IFK_PlaylistTrackTrackId")
+// }
+
+model Track {
+  id       Int             @id @unique(map: "IPK_Track") @default(autoincrement())
+  name          String
+  albumId       Int?
+  mediaTypeId   Int
+  genreId       Int?
+  composer      String?
+  milliseconds  Int
+  bytes         Int?
+  unitPrice     Decimal
+  album         Album?          @relation(fields: [albumId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  genre         Genre?          @relation(fields: [genreId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  mediaType     MediaType       @relation(fields: [mediaTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invoiceLine   InvoiceLine[]
+  playlists     Playlist[]
+
+  @@index([mediaTypeId], map: "IFK_TrackMediaTypeId")
+  @@index([genreId], map: "IFK_TrackGenreId")
+  @@index([albumId], map: "IFK_TrackAlbumId")
 }

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "0df6aa8f-6733-45b1-96c8-7b2cae30234d",
+    "checksum": "7131eefbc2646aab2ef774745fe0badc8002204bddd1cf55399fe5e00c8be2e9",
+    "finished_at": "1636647636495",
+    "migration_name": "20211111162036_rework_ids",
+    "logs": null,
+    "rolled_back_at": null,
+    "started_at": "1636647636483",
+    "applied_steps_count": "1"
+  }
+]
