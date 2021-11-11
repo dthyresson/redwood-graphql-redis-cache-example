@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    mediaTypes: [MediaType!]! @requireAuth
-    mediaType(id: Int!): MediaType @requireAuth
+    mediaTypes: [MediaType!]! @skipAuth
+    mediaType(id: Int!): MediaType @skipAuth
   }
 
   input CreateMediaTypeInput {

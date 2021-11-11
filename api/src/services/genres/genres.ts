@@ -1,5 +1,4 @@
 import type { Prisma } from '@prisma/client'
-import type { ResolverArgs } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
 
@@ -34,13 +33,30 @@ export const updateGenre = ({ id, input }: UpdateGenreArgs) => {
   })
 }
 
+interface GenreUpdateManyArgs extends Prisma.GenreUpdateManyArgs {
+  ids: [number]
+  input: Prisma.GenreUpdateInput
+}
+
+export const updateManyGenre = ({ ids, input }: GenreUpdateManyArgs) => {
+  return db.genre.updateMany({
+    data: input,
+    where: { id: { in: ids } },
+  })
+}
+
 export const deleteGenre = ({ id }: Prisma.GenreWhereUniqueInput) => {
   return db.genre.delete({
     where: { id },
   })
 }
 
-export const Genre = {
-  track: (_obj, { root }: ResolverArgs<ReturnType<typeof genre>>) =>
-    db.genre.findUnique({ where: { id: root.id } }).track(),
+interface GenreDeleteManyArgs {
+  ids: [number]
+}
+
+export const deleteManyGenre = ({ ids }: GenreDeleteManyArgs) => {
+  return db.genre.deleteMany({
+    where: { id: { in: ids } },
+  })
 }

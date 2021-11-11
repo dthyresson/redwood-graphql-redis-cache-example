@@ -17,8 +17,8 @@ export const schema = gql`
   }
 
   type Query {
-    tracks: [Track!]! @requireAuth
-    track(id: Int!): Track @requireAuth
+    tracks: [Track!]! @skipAuth
+    track(id: Int!): Track @skipAuth
   }
 
   input CreateTrackInput {

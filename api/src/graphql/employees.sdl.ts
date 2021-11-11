@@ -21,8 +21,8 @@ export const schema = gql`
   }
 
   type Query {
-    employees: [Employee!]! @requireAuth
-    employee(id: Int!): Employee @requireAuth
+    employees: [Employee!]! @skipAuth
+    employee(id: Int!): Employee @skipAuth
   }
 
   input CreateEmployeeInput {

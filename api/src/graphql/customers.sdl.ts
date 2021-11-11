@@ -18,8 +18,8 @@ export const schema = gql`
   }
 
   type Query {
-    customers: [Customer!]! @requireAuth
-    customer(id: Int!): Customer @requireAuth
+    customers: [Customer!]! @skipAuth
+    customer(id: Int!): Customer @skipAuth
   }
 
   input CreateCustomerInput {

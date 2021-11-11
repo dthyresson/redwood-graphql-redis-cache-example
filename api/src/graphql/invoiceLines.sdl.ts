@@ -10,8 +10,8 @@ export const schema = gql`
   }
 
   type Query {
-    invoiceLines: [InvoiceLine!]! @requireAuth
-    invoiceLine(id: Int!): InvoiceLine @requireAuth
+    invoiceLines: [InvoiceLine!]! @skipAuth
+    invoiceLine(id: Int!): InvoiceLine @skipAuth
   }
 
   input CreateInvoiceLineInput {

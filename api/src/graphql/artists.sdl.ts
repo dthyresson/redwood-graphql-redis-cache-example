@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    artists: [Artist!]! @requireAuth
-    artist(id: Int!): Artist @requireAuth
+    artists: [Artist!]! @skipAuth
+    artist(id: Int!): Artist @skipAuth
   }
 
   input CreateArtistInput {

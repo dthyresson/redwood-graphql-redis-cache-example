@@ -11,5 +11,3 @@ echo ".separator ","\n.import ./data/Chinook_Sqlite.csv/MediaType.csv MediaType"
 echo ".separator ","\n.import ./data/Chinook_Sqlite.csv/Playlist.csv Playlist" | sqlite3 ./api/db/dev.db
 echo ".separator ","\n.import ./data/Chinook_Sqlite.csv/PlaylistTrack.csv _PlaylistToTrack" | sqlite3 ./api/db/dev.db
 echo ".separator ","\n.import ./data/Chinook_Sqlite.csv/Track.csv Track" | sqlite3 ./api/db/dev.db
-
-

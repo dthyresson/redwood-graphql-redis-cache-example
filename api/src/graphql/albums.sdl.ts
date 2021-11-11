@@ -8,8 +8,8 @@ export const schema = gql`
   }
 
   type Query {
-    albums: [Album!]! @requireAuth
-    album(id: Int!): Album @requireAuth
+    albums: [Album!]! @skipAuth
+    album(id: Int!): Album @skipAuth
   }
 
   input CreateAlbumInput {

@@ -114,17 +114,6 @@ model Playlist {
   tracks Track[]
 }
 
-// model PlaylistTrack {
-//   playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   playlistId Int
-//   track      Track    @relation(fields: [trackId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   trackId    Int
-
-//   @@id([playlistId, trackId])
-//   @@unique([playlistId, trackId], map: "IPK_PlaylistTrack")
-//   @@index([trackId], map: "IFK_PlaylistTrackTrackId")
-// }
-
 model Track {
   id       Int             @id @unique(map: "IPK_Track") @default(autoincrement())
   name          String

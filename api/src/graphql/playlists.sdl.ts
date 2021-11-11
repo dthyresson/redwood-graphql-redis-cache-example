@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    playlists: [Playlist!]! @requireAuth
-    playlist(id: Int!): Playlist @requireAuth
+    playlists: [Playlist!]! @skipAuth
+    playlist(id: Int!): Playlist @skipAuth
   }
 
   input CreatePlaylistInput {

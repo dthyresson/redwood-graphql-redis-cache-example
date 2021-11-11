@@ -6,8 +6,8 @@ export const schema = gql`
   }
 
   type Query {
-    genres: [Genre!]! @requireAuth
-    genre(id: Int!): Genre @requireAuth
+    genres: [Genre!]! @skipAuth
+    genre(id: Int!): Genre @skipAuth
   }
 
   input CreateGenreInput {
@@ -18,9 +18,16 @@ export const schema = gql`
     name: String
   }
 
+  type BatchPayload {
+    count: Int
+  }
+
   type Mutation {
     createGenre(input: CreateGenreInput!): Genre! @requireAuth
     updateGenre(id: Int!, input: UpdateGenreInput!): Genre! @requireAuth
+    updateManyGenre(ids: [Int]!, input: UpdateGenreInput!): BatchPayload!
+      @requireAuth
     deleteGenre(id: Int!): Genre! @requireAuth
+    deleteManyGenre(ids: [Int]!): BatchPayload! @requireAuth
   }
 `
