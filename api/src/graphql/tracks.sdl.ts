@@ -1,4 +1,23 @@
 export const schema = gql`
+  type PageInfo {
+    startCursor: String!
+    endCursor: String!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+  }
+
+  type TrackEdge {
+    node: Track!
+    cursor: String!
+    playlist: Playlist
+  }
+
+  type TrackConnection {
+    edges: [TrackEdge]
+    pageInfo: PageInfo!
+    totalCount: Int
+  }
+
   type Track {
     id: Int!
     name: String!
@@ -16,8 +35,25 @@ export const schema = gql`
     playlists: [Playlist]!
   }
 
+  type PlayListWithTracksQuery {
+    playlist: Playlist!
+    tracks: TrackConnection
+  }
+
   type Query {
-    tracks: [Track!]! @skipAuth
+    tracks(
+      first: Int
+      last: Int
+      before: String
+      after: String
+    ): TrackConnection @skipAuth
+    tracksForPlaylist(
+      id: Int!
+      first: Int
+      last: Int
+      before: String
+      after: String
+    ): TrackConnection @skipAuth
     track(id: Int!): Track @skipAuth
   }
 

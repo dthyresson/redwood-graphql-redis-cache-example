@@ -2,12 +2,13 @@ export const schema = gql`
   type Playlist {
     id: Int!
     name: String
-    tracks: [Track]!
+    tracks: [Track]
+    metrics: Metrics
   }
 
   type Query {
     playlists: [Playlist!]! @skipAuth
-    playlist(id: Int!): Playlist @skipAuth
+    playlist(id: Int!): Playlist! @skipAuth
   }
 
   input CreatePlaylistInput {

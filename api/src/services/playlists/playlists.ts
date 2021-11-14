@@ -5,7 +5,9 @@ import { db } from 'src/lib/db'
 
 export const playlists = () => {
   return db.playlist.findMany({
-    include: { tracks: { include: { album: { include: { artist: true } } } } },
+    include: {
+      tracks: { include: { album: { include: { artist: true } } } },
+    },
   })
 }
 
@@ -44,6 +46,6 @@ export const deletePlaylist = ({ id }: Prisma.PlaylistWhereUniqueInput) => {
 }
 
 export const Playlist = {
-  tracks: (_obj, { root }: ResolverArgs<ReturnType<typeof playlist>>) =>
+  tracks: (obj, { root }: ResolverArgs<ReturnType<typeof playlist>>) =>
     db.playlist.findUnique({ where: { id: root.id } }).tracks(),
 }

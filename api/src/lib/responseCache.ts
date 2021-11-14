@@ -22,10 +22,11 @@ export const cache = createRedisCache({ redis })
 
 // Configure the Response Cache
 export const responseCacheConfig = {
-  enabled: (context) => enableCache(context),
+  enabled: (context) => false && enableCache(context),
   cache,
   invalidateViaMutation: !isPrismaMiddlewareInvalidationEnabled,
   ttl: EXPIRE_IN_SECONDS * 1000,
+  includeExtensionMetadata: true,
 }
 
 const ACTIONS_TO_INVALIDATE = [
