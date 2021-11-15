@@ -1,52 +1,73 @@
+import type { PlayListWithTracksQuery } from 'types/graphql'
 import { ClockIcon, MusicNoteIcon, UsersIcon } from '@heroicons/react/solid'
-
 import { SaveIcon } from '@heroicons/react/outline'
 
-import type { FindPlaylistQuery } from 'types/graphql'
+import { Link, routes, useParams } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-export const afterQuery = (data) => {
-  console.log(data.extensions)
-  return data
+const DEFAULT_SHOW = 100
+
+export const beforeQuery = (props) => {
+  const { first, before } = props
+  return {
+    variables: {
+      ...props,
+      first: first || DEFAULT_SHOW,
+      before,
+    },
+  }
 }
 
 export const QUERY = gql`
-  query FindPlaylistQuery($id: Int!) {
-    playlist: playlist(id: $id) {
+  query PlaylistWithTracks(
+    $id: Int!
+    $first: Int
+    $last: Int
+    $after: String
+    $before: String
+  ) {
+    playlist(id: $id) {
       id
       name
-      tracks {
-        id
-        name
-        milliseconds
-        unitPrice
-        genre {
+    }
+    tracks: tracksForPlaylist(
+      id: $id
+      first: $first
+      last: $last
+      before: $before
+      after: $after
+    ) {
+      edges {
+        node {
           id
           name
-        }
-        mediaType {
-          id
-          name
-        }
-        album {
-          id
-          title
-          artist {
+          milliseconds
+          genre {
             id
             name
           }
+          mediaType {
+            id
+            name
+          }
+          album {
+            id
+            title
+            artist {
+              id
+              name
+            }
+          }
         }
+        cursor
       }
-    }
-    metrics {
-      init
-      parse
-      validate
-      contextFactory
-      execute
-      hit
-      ttl
-      didCache
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
     }
   }
 `
@@ -61,13 +82,20 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({
   playlist,
-}: // metrics,
-CellSuccessProps<FindPlaylistQuery>) => {
+  tracks,
+}: CellSuccessProps<PlayListWithTracksQuery>) => {
+  const { first, last } = useParams()
+
   return (
     <div className="container mx-auto sm:px-6 lg:px-8">
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            {playlist.name}
+          </h3>
+        </div>
         <ul className="divide-y divide-gray-200">
-          {playlist.tracks.map((track) => (
+          {tracks.edges.map(({ node: track }) => (
             <li key={track.id}>
               <a href="/" className="block hover:bg-gray-50">
                 <div className="px-4 py-4 sm:px-6">
@@ -119,6 +147,40 @@ CellSuccessProps<FindPlaylistQuery>) => {
           ))}
         </ul>
       </div>
+      <nav
+        className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+        aria-label="Pagination"
+      >
+        <div className="hidden sm:block">
+          <p className="text-sm text-gray-700">
+            Showing <span className="font-medium">1</span> to{' '}
+            <span className="font-medium">10</span> of{' '}
+            <span className="font-medium">{tracks.totalCount}</span> results
+          </p>
+        </div>
+        <div className="flex-1 flex justify-between sm:justify-end">
+          <Link
+            to={routes.home({
+              id: playlist.id,
+              before: tracks.pageInfo.startCursor,
+              last: last || DEFAULT_SHOW,
+            })}
+            className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Previous
+          </Link>
+          <Link
+            to={routes.home({
+              id: playlist.id,
+              after: tracks.pageInfo.endCursor,
+              first: first || DEFAULT_SHOW,
+            })}
+            className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Next
+          </Link>
+        </div>
+      </nav>
     </div>
   )
 }

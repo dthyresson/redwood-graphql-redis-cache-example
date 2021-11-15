@@ -2,7 +2,7 @@ import { render, screen } from '@redwoodjs/testing/web'
 import { Loading, Empty, Failure, Success } from './PlaylistCell'
 import { standard } from './PlaylistCell.mock'
 
-describe('PlaylistCell', () => {
+describe('PlayListWithTracksCell', () => {
   it('renders Loading successfully', () => {
     expect(() => {
       render(<Loading />)
@@ -29,7 +29,7 @@ describe('PlaylistCell', () => {
 
   it('renders Success successfully', async () => {
     expect(() => {
-      render(<Success playlist={standard().playlist} />)
+      render(<Success playListWithTracks={standard().playListWithTracks} />)
     }).not.toThrow()
   })
 })

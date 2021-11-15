@@ -1,5 +1,5 @@
-import { Loading, Empty, Failure, Success } from './PlayListWithTracksCell'
-import { standard } from './PlayListWithTracksCell.mock'
+import { Loading, Empty, Failure, Success } from './PlaylistCell'
+import { standard } from './PlaylistCell.mock'
 
 export const loading = () => {
   return Loading ? <Loading /> : null

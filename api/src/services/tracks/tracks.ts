@@ -18,7 +18,6 @@ export const tracks = async (args: ConnectionArguments) => {
       db.track.findMany({
         ...args,
       }),
-
     () => db.track.count(),
     args,
     {
